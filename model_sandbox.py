@@ -26,6 +26,8 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Lambda, ELU
 from keras.layers.convolutional import Convolution2D
 
+import argparse
+
 def get_model(time_len=1):
   channel, height, width = 3, 160, 320  # camera format
 
@@ -49,6 +51,13 @@ def get_model(time_len=1):
   model.compile(optimizer="adam", loss="mse")
 
   return model
+
+# conda install -c conda-forge flask-socketio=2.7.1
+# center
+#gen = ImageDataGenerator(featurewise_center=True,
+#                         featurewise_std_normalization=True)
+# normalize
+#gen = ImageDataGenerator(rescale=1./255)
 
 #from keras.models import Sequential
 #from keras.layers import Dense

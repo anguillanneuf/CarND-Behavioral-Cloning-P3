@@ -65,7 +65,7 @@ def main(_):
   if not os.path.exists("./outputs"):
       os.makedirs("./outputs")
 
-  model.save_weights("./outputs/model_01.h5", True)
+  model.save_weights("./outputs/model_01.h5")
   with open('./outputs/model_01.json', 'w') as f:
     json.dump(model.to_json(), f)
 
