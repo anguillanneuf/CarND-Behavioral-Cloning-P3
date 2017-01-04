@@ -11,15 +11,20 @@ import cv2; # import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
 raw = pd.read_csv('./data/driving_log.csv')
+for i in raw.columns:
+    if isinstance(raw[i][1], str):     
+        raw[i]=raw[i].map(str.strip)
 
-tot = raw.shape[0]*2
-h = 64; w = 128; c = 3; s = [1,h,w,3]; ε = .25
+tot = raw.shape[0]*3*2
+h = 32; w = 64; c = 3; s = [1,h,w,3]; ε = .25
 
 dat = {'features':np.zeros(shape=[tot,h,w,3]), 'labels':np.zeros(shape=tot), 
        'position': ['' for i in range(tot)], 
-       'notes': ['org' for i in range(int(tot/2))]+['aug' for i in range(tot)]}
+       'notes': ['org' for i in range(int(tot/2))]+
+                ['aug' for i in range(int(tot/2))]}
 
 for i, j in enumerate(os.listdir('./data/IMG')):
+    print(j)
     # original/flipped images.
     img = cv2.cvtColor(cv2.imread('./data/IMG/'+j.strip()), cv2.COLOR_BGR2RGB)
     img = cv2.resize(img, (w,h))
