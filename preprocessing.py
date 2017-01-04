@@ -33,9 +33,10 @@ def main(_):
                     ['aug' for i in range(int(tot/2))]}
     
     for i, j in enumerate(os.listdir('./data/IMG')):
-        print(j)
+
         # original/flipped images.
-        img = cv2.cvtColor(cv2.imread('./data/IMG/'+j.strip()), cv2.COLOR_BGR2RGB)
+        img = cv2.cvtColor(cv2.imread('./data/IMG/'+j.strip()), 
+                           cv2.COLOR_BGR2RGB)
         img = cv2.resize(img, (w,h))
         flipped = cv2.flip(img,1)
         
