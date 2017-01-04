@@ -49,15 +49,15 @@ def get_model(time_len=1):
 
   return model
 
-def main(_):
+def main():
 
   model = get_model()
   model.fit_generator(
-    gen.flow(X_train, y_train, batch_size=64),
+    gen.flow(X_train, y_train, batch_size=128),
     samples_per_epoch=len(X_train),
-    nb_epoch=1,
-    validation_data=gen.flow(X_val, y_val, batch_size=64),
-    nb_val_samples=1000
+    nb_epoch=10,
+    validation_data=gen.flow(X_val, y_val, batch_size=128),
+    nb_val_samples=1500
   )
 
   print("Saving model weights and configuration file.")
@@ -65,8 +65,8 @@ def main(_):
   if not os.path.exists("./outputs"):
       os.makedirs("./outputs")
 
-  model.save_weights("./outputs/model_01.h5")
-  with open('./outputs/model_01.json', 'w') as f:
+  model.save_weights("./outputs/model_03.h5")
+  with open('./outputs/model_03.json', 'w') as f:
     json.dump(model.to_json(), f)
 
 
