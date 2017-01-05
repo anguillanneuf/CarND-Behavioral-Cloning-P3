@@ -11,10 +11,10 @@ from sklearn.model_selection import train_test_split
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
-
+    
 # command line flags
-flags.DEFINE_integer('height', 32, "Resize image height")
-flags.DEFINE_integer('width', 64, "Reisze image width")
+flags.DEFINE_integer('height', 48, "Resize image height")
+flags.DEFINE_integer('width', 96, "Reisze image width")
 flags.DEFINE_float('epsilon', 0.25, "Adjust left/right images by ε")
 
 def main(_):
@@ -59,19 +59,13 @@ def main(_):
         dat['position'][i+int(tot/2)] = pos_new
     
     X_train, X_test, y_train, y_test = \
-    train_test_split(dat['features'], dat['labels'], test_size=0.2)
-    
-    X_train, X_val, y_train, y_val = \
-    train_test_split(X_train, y_train, test_size=0.2)
+    train_test_split(dat['features'], dat['labels'], test_size=0.3)
     
     train = {'features': X_train, 'labels': y_train}
-    validation = {'features': X_val, 'labels': y_val}
     test = {'features': X_test, 'labels': y_test}
     
     with open("./data/train.p", "wb") as f:
         pickle.dump(train, f)
-    with open("./data/validation.p", "wb") as f:
-        pickle.dump(validation, f)
     with open("./data/test.p", "wb") as f:
         pickle.dump(test, f)
 

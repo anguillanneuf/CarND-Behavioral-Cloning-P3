@@ -8,6 +8,21 @@ Created on Fri Dec 30 17:08:31 2016
 proportion of frames that represent road curves."
 """
 
+#def gen(X, y, batch_size = 128):
+#    h,w,c=32,64,3
+#    XX = np.zeros((batch_size, h,w,c))
+#    yy = np.zeros(batch_size)
+#    cursor = 0
+#    idx = np.random.permutation(np.arange(len(X)))
+#    X, y = X[idx,], y[idx]
+#    while True:
+#        for i in range(batch_size):
+#            cursor = cursor % len(X)
+#            XX[i], yy[i] = X[cursor], y[cursor]
+#            cursor += 1
+#        yield XX, yy
+
+
 import pickle
 
 with open('./data/train.p', mode='rb') as f:
