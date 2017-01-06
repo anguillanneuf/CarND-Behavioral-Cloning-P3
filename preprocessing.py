@@ -13,9 +13,9 @@ flags = tf.app.flags
 FLAGS = flags.FLAGS
     
 # command line flags
-flags.DEFINE_integer('height', 48, "Resize image height")
-flags.DEFINE_integer('width', 96, "Reisze image width")
-flags.DEFINE_float('epsilon', 0.25, "Adjust left/right images by ε")
+flags.DEFINE_integer('height', 32, "Resize image height")
+flags.DEFINE_integer('width', 64, "Reisze image width")
+flags.DEFINE_float('epsilon', 0.04, "Adjust left/right images by ε")
 
 def main(_):
 

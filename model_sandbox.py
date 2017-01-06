@@ -23,6 +23,46 @@ proportion of frames that represent road curves."
 #        yield XX, yy
 
 
+def limit(X, y, s = 700):
+    bad = [k for k,v in enumerate(y) if v in [0, -.25, .25]]
+    good = list(set(range(0, len(y)))-set(bad))
+    new = good + [bad[i] for i in np.random.randint(0,len(bad),s)]
+    X,y = X[new,], y[new]
+    return X, y
+    
+def main():
+    
+    if not os.path.exists("./outputs"): os.makedirs("./outputs")
+    
+    model = get_model()
+    
+    b = 64
+    
+    for i in range(8):
+        X, y = limit(X_train, y_train, 700 + i*100)
+        checkpointer = ModelCheckpoint("./outputs/model.hdf5", verbose=1, 
+                               save_best_only=True)
+        if i > 0:
+            model.fit_generator(gen.flow(X, y, batch_size=b),
+                        samples_per_epoch=len(X),
+                        nb_epoch=1,
+                        validation_data=gen.flow(X_val, y_val, batch_size=b),
+                        nb_val_samples=len(X_val),
+                        callbacks=[checkpointer]
+                        )
+    
+        else: 
+            model.fit_generator(gen.flow(X, y, batch_size=b),
+                        samples_per_epoch=len(X),
+                        nb_epoch=1,
+                        validation_data=gen.flow(X_val, y_val, batch_size=b),
+                        nb_val_samples=len(X_val),
+                        callbacks=[checkpointer])
+
+    model.save_weights("./outputs/model05.h5")
+    with open('./outputs/model05.json', 'w') as f:
+        json.dump(model.to_json(), f)
+
 import pickle
 
 with open('./data/train.p', mode='rb') as f:
