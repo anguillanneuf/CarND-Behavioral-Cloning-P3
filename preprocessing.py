@@ -15,7 +15,7 @@ FLAGS = flags.FLAGS
 # command line flags
 flags.DEFINE_integer('height', 32, "Resize image height")
 flags.DEFINE_integer('width', 64, "Reisze image width")
-flags.DEFINE_float('epsilon', 0.04, "Adjust left/right images by ε")
+flags.DEFINE_float('epsilon', 0.08, "Adjust left/right images by ε")
 
 def main(_):
 
@@ -27,7 +27,8 @@ def main(_):
     tot = raw.shape[0]*3*2
     h = FLAGS.height; w = FLAGS.width; ε = FLAGS.epsilon
     
-    dat = {'features':np.zeros(shape=[tot,h,w,3]), 'labels':np.zeros(shape=tot), 
+    dat = {'features':np.zeros(shape=[tot,h,w,3]), 
+           'labels':np.zeros(shape=tot), 
            'position': ['' for i in range(tot)], 
            'notes': ['org' for i in range(int(tot/2))]+
                     ['aug' for i in range(int(tot/2))]}
@@ -40,7 +41,7 @@ def main(_):
         img = cv2.resize(img, (w,h))
         flipped = cv2.flip(img,1)
         
-        # adjusted angles for left/right images/new angles for flipped images
+        # offset angles for left/right, flipped angles for flipped images
         pos_old = ('left' if j.find('left')>=0 else 
                    'right' if j.find('right')>=0 else 'center')    
         pos_new = ('right' if j.find('left')>=0 else 
@@ -59,7 +60,7 @@ def main(_):
         dat['position'][i+int(tot/2)] = pos_new
     
     X_train, X_test, y_train, y_test = \
-    train_test_split(dat['features'], dat['labels'], test_size=0.3)
+    train_test_split(dat['features'], dat['labels'], test_size=0.1)
     
     train = {'features': X_train, 'labels': y_train}
     test = {'features': X_test, 'labels': y_test}

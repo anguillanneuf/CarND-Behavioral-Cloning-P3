@@ -12,6 +12,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Lambda, ELU
 from keras.layers.convolutional import Convolution2D
 from keras.callbacks import ModelCheckpoint
+from keras.initializations import he_normal
 
 import pickle; import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
@@ -25,22 +26,26 @@ with open('./data/test.p', mode='rb') as f:
     test = pickle.load(f)
 X_test, y_test = test['features'], test['labels']
 
-gen = ImageDataGenerator()
+gen = ImageDataGenerator(height_shift_range=0.2)
 
 def get_model(time_len=1):
-    h,w,c=32,64,3#48,96,3#32,64,3  
+    h,w,c=32,64,3 #48,96,3 #32,64,3  
 
     model = Sequential()
     model.add(Lambda(lambda x: x/127.5 - 1.,
               input_shape=(h,w,c),
               output_shape=(h,w,c)))
-    model.add(Convolution2D(3, 1, 1, subsample=(1, 1), border_mode='same'))
+    model.add(Convolution2D(3, 1, 1, subsample=(1, 1), border_mode='same',
+                            init = 'he_normal'))
     model.add(ELU())
-    model.add(Convolution2D(16, 7, 7, subsample=(4, 4), border_mode="same"))
+    model.add(Convolution2D(16, 5, 5, subsample=(4, 4), border_mode="same",
+                            init = 'he_normal'))
     model.add(ELU())
-    model.add(Convolution2D(32, 5, 5, subsample=(2, 2), border_mode="same"))
+    model.add(Convolution2D(32, 3, 3, subsample=(2, 2), border_mode="same",
+                            init = 'he_normal'))
     model.add(ELU())
-    model.add(Convolution2D(64, 5, 5, subsample=(2, 2), border_mode="same"))
+    model.add(Convolution2D(64, 3, 3, subsample=(2, 2), border_mode="same", 
+                            init = 'he_normal'))
     model.add(Flatten())
     model.add(Dropout(.2))
     model.add(ELU())
@@ -55,7 +60,8 @@ def get_model(time_len=1):
     
 def main():
     
-    if not os.path.exists("./outputs"): os.makedirs("./outputs")
+    if not os.path.exists("./outputs"): 
+        os.makedirs("./outputs")
     
     model = get_model()
     
@@ -72,8 +78,8 @@ def main():
                 callbacks=[checkpointer]
                 )
     
-    model.save_weights("./outputs/model06.h5")
-    with open('./outputs/model06.json', 'w') as f:
+    model.save_weights("./outputs/model.h5")
+    with open('./outputs/model.json', 'w') as f:
         json.dump(model.to_json(), f)
 
 if __name__ == '__main__':
