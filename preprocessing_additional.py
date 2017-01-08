@@ -7,16 +7,16 @@ Created on Fri Dec 30 17:08:31 2016
 """
 import numpy as np; import pandas as pd; import os; import pickle
 import cv2; # import tensorflow as tf; # import matplotlib.pyplot as plt
-# from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split
 
 def main():
 
-    raw = pd.read_csv('./data/driving_log.csv')
+    raw = pd.read_csv('./mydata/driving_log.csv')
     for i in raw.columns:
         if isinstance(raw[i][1], str):
             raw[i]=raw[i].map(str.strip)
     
-    today = [i for i in os.listdir('./data/IMG')if i.find('2017_01_08')>=0]
+    today = [i for i in os.listdir('./mydata/IMG')if i.find('2017_01_')>=0]
     
     tot = len(today)*3*2
     h = 32; w = 64; ε = 0.08
@@ -30,7 +30,7 @@ def main():
     for i, j in enumerate(today):
 
         # original/flipped images.
-        img = cv2.cvtColor(cv2.imread('./data/IMG/'+j.strip()), 
+        img = cv2.cvtColor(cv2.imread('./mydata/IMG/'+j.strip()), 
                            cv2.COLOR_BGR2RGB)
         img = cv2.resize(img, (w,h))
         flipped = cv2.flip(img,1)
@@ -40,8 +40,8 @@ def main():
                    'right' if j.find('right')>=0 else 'center')    
         pos_new = ('right' if j.find('left')>=0 else 
                    'left' if j.find('right')>=0 else 'center')
-        newpath = '/Users/tz/Documents/carnd/CarND-Behavioral-Cloning-P3/data/IMG/'
-        old = raw[raw[pos_old]==newpath+j]['steering']
+        p = '/Users/tz/Documents/carnd/CarND-Behavioral-Cloning-P3/mydata/IMG/'
+        old = raw[raw[pos_old]==p+j]['steering']
         adjusted = np.clip(old+ε if pos_old=='left' else 
                            old-ε if pos_old=='right' else old, -1., 1.)
         new = adjusted*-1.
@@ -53,9 +53,19 @@ def main():
         dat['labels'][i+int(tot/2)] = new
         dat['position'][i+int(tot/2)] = pos_new
     
-    with open("./data/additional.p", "wb") as f:
+    with open("./mydata/mydat.p", "wb") as f:
         pickle.dump(dat, f)
-        
+    
+    X_train, X_test, y_train, y_test = \
+    train_test_split(dat['features'], dat['labels'], test_size=0.1)
+    
+    train = {'features': X_train, 'labels': y_train}
+    test = {'features': X_test, 'labels': y_test}
+    
+    with open("./mydata/train.p", "wb") as f:
+        pickle.dump(train, f)
+    with open("./mydata/test.p", "wb") as f:
+        pickle.dump(test, f)
 
 if __name__ == '__main__':
     main()

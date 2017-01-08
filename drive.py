@@ -13,7 +13,8 @@ from flask import Flask, render_template
 from io import BytesIO
 
 from keras.models import model_from_json
-from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array
+from keras.preprocessing.image import ImageDataGenerator, array_to_img, \
+img_to_array
 
 # Fix error with Keras and TensorFlow
 import tensorflow as tf
@@ -42,10 +43,13 @@ def telemetry(sid, data):
     image_array = cv2.resize(image_array, (w,h))
     
     transformed_image_array = image_array[None, :, :, :]
-    # This model currently assumes that the features of the model are just the images. Feel free to change this.
-    steering_angle = float(model.predict(transformed_image_array, batch_size=1))
-    # The driving model currently just outputs a constant throttle. Feel free to edit this.
-    throttle = 0.2
+    # This model currently assumes that the features of the model are 
+    # just the images. Feel free to change this.
+    steering_angle = float(model.predict(transformed_image_array, 
+                                         batch_size=1))
+    # The driving model currently just outputs a constant throttle. 
+    # Feel free to edit this.
+    throttle = 0.20
     print(steering_angle, throttle)
     send_control(steering_angle, throttle)
 
@@ -66,10 +70,10 @@ def send_control(steering_angle, throttle):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Remote Driving')
     parser.add_argument('model', type=str,
-    help='Path to model definition json. Model weights should be on the same path.')
+    help='Path to model definition json. Model weights are on the same path.')
     args = parser.parse_args()
     with open(args.model, 'r') as jfile:
-        # NOTE: if you saved the file by calling json.dump(model.to_json(), ...)
+        # NOTE: if you saved the file by calling json.dump(model.to_json(), ..)
         # then you will have to call:
         #
         #   model = model_from_json(json.loads(jfile.read()))\
