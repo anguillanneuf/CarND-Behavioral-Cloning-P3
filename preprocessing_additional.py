@@ -6,8 +6,7 @@ Created on Fri Dec 30 17:08:31 2016
 @author: tz
 """
 import numpy as np; import pandas as pd; import os; import pickle
-import cv2; # import tensorflow as tf; # import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
+import cv2; from sklearn.model_selection import train_test_split
 
 def main():
 
@@ -35,7 +34,8 @@ def main():
         img = cv2.resize(img, (w,h))
         flipped = cv2.flip(img,1)
         
-        # offset angles for left/right, flipped angles for flipped images
+        # offset angles for left/right images.
+        # flip angles for flipped images.
         pos_old = ('left' if j.find('left')>=0 else 
                    'right' if j.find('right')>=0 else 'center')    
         pos_new = ('right' if j.find('left')>=0 else 

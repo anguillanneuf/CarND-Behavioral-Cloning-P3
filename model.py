@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# 0.0119
 """
 Created on Fri Dec 30 17:08:31 2016
 
 @author: tz
 """
 import os
-import json; import h5py; import pickle;
+import json
+import h5py
+import pickle
+import numpy as np
+
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Lambda, ELU
 from keras.layers.convolutional import Convolution2D
 from keras.callbacks import ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
-#from keras.initializations import he_normal
 from keras.layers.normalization import BatchNormalization
 
-import numpy as np
-import matplotlib.pyplot as plt
 
-
+# Load data. 
 with open('./data/train.p', mode='rb') as f:
     train = pickle.load(f)
 X_train_, y_train_ = train['features'], train['labels']
@@ -28,32 +28,14 @@ with open('./data/test.p', mode='rb') as f:
     test = pickle.load(f)
 X_test_, y_test_ = test['features'], test['labels']
 
-#with open('./mydata/mydat.p', mode='rb') as f:
-#    mydat = pickle.load(f)
-#X_add, y_add = mydat['features'], mydat['labels']
-#
-#with open('./mydata/train.p', mode='rb') as f:
-#    mytrain = pickle.load(f)
-#X_mytrain, y_mytrain = mytrain['features'], mytrain['labels']
-#
-#with open('./mydata/test.p', mode='rb') as f:
-#    mytest = pickle.load(f)
-#X_mytest, y_mytest = mytest['features'], mytest['labels']
-#
-#X_train = np.append(X_train_, X_mytrain, axis = 0)
-#y_train = np.append(y_train_, y_mytrain)
-#X_test = np.append(X_test_, X_mytest, axis = 0)
-#y_test = np.append(y_test_, y_mytest)
 
-#plt.hist(y_train, bins=50)
-
-# gen = ImageDataGenerator()
+# Python generator. 
 gen_train = ImageDataGenerator(height_shift_range=0.2)
 gen_test = ImageDataGenerator()
 
 
-def get_model(time_len=1):
-    h,w,c=32,64,3 #48,96,3 #32,64,3  
+def get_model():
+    h,w,c=32,64,3
 
     model = Sequential()
     model.add(Lambda(lambda x: x/127.5 - 1.,
@@ -75,9 +57,11 @@ def get_model(time_len=1):
                             init = 'he_normal'))
     model.add(Flatten())
     model.add(Dropout(.2))
+    model.add(BatchNormalization())
     model.add(ELU())
     model.add(Dense(512))
     model.add(Dropout(.5))
+    model.add(BatchNormalization())
     model.add(ELU())
     model.add(Dense(1))
 
@@ -86,14 +70,14 @@ def get_model(time_len=1):
     return model
 
     
-# limit the number of examples with close to zero steering angles
-def limit(X, y, α=.5):
-    bad = [k for k,v in enumerate(y) if v >=-.08 and v <=.08]
+# Limit the number of near-zero angles (defined by offset β) by a factor of α.
+def limit(X, y, β=.08, α=.5):  
+    bad = [k for k,v in enumerate(y) if v >=-β and v <=β]
     good = list(set(range(0, len(y)))-set(bad))
     n = len(bad)
     new = good + [bad[i] for i in np.random.randint(0, n, int(n*α))]
-    X,y = X[new,], y[new]
-    return X, y
+    
+    return X[new,], y[new]
     
 
 def main():
