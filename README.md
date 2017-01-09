@@ -34,3 +34,7 @@ Interestingly, I did not do as much preprocessing as some had suggested since th
 I made use of center/left/right images. Through trial and error, I found the best offset angle for the left and right images for me was not `0.25` but `0.08`, which correspondes to a `2°` turn in the simulator. 
 
 In addition, I made use of `height_shift_range` in keras's `ImageDataGenerator` and set it to `0.2`. In my reasoning, shifting the image along the vertical axis works the same as cropping out the car hood on the bottom or the blue sky on the top of the image, even though cropping could create more precise data for the network to learn. I would still prefer my method over cropping because if the road for some reason is uneven and makes the car bounce up and down quite a lot, the front camera video feed will change, and my model, which is trained on height-shifted images, still knows how to handle those situations. I hope. 
+
+### Final Model
+
+For my final model, I used only the Udacity data without anything that I collected myself. I have `43,394` training examples and `4,822` testing examples. They add up exactly to `8036*3*2`. I trained for 10 epochs. My validation loss decreased all the way to 0.013 for this particular model, higher than some other models trained using both Udacity and self-collected data, which were also able to drive the car around in the simulator.   
