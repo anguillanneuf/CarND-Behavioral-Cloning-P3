@@ -31,7 +31,14 @@ Eventually I stopped and questioned my model architecture, because it clearly un
 
 Interestingly, I did not do as much preprocessing as some had suggested since there is quite some discussion on Slack and in the forum, especially on image augmentation. 
 
-I made use of center/left/right images. Through trial and error, I found the best offset angle for the left and right images for me was not `0.25` but `0.08`, which correspondes to a `2°` turn in the simulator. 
+I made use of center/left/right images. Through trial and error, I found the best offset angle for the left and right images for me was not `0.25` but `0.08`, which correspondes to a `2°` turn in the simulator. Offset angles means how much I add or substract from the original steering angle for the provided left/right images. Here is an example `IMG/center_2016_12_01_13_39_27_924.jpg`. 
+
+Original: -0.933238  
+![original](./plots/center.png)  
+Left: -0.933238+0.08  
+![left](./plots/left.png)  
+Flipped Left: -(-0.933238+0.08)  
+![left flipped](./plots/left_flipped.png)
 
 In addition, I made use of `height_shift_range` in keras's `ImageDataGenerator` and set it to `0.2`. In my reasoning, shifting the image along the vertical axis works the same as cropping out the car hood on the bottom or the blue sky on the top of the image, even though cropping could create more precise data for the network to learn. I would still prefer my method over cropping because if the road for some reason is uneven and makes the car bounce up and down quite a lot, the front camera video feed will change, and my model, which is trained on height-shifted images, still knows how to handle those situations. I hope. 
 
