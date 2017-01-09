@@ -29,7 +29,8 @@ with open('./data/test.p', mode='rb') as f:
 X_test_, y_test_ = test['features'], test['labels']
 
 
-# Python generator. 
+# Python generator. There is a version I wrote on my own which can be 
+# found in sandbox.py. But for my final model, I used keras's. 
 gen_train = ImageDataGenerator(height_shift_range=0.2)
 gen_test = ImageDataGenerator()
 
