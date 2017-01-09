@@ -21,11 +21,15 @@ Following the `3 1x1` are `16 5x5` with a stride of `4`, `32 3x3` with a stride 
 
 From my experience with Project 2, He normal weights worked very well, that's probably the only reason why I switch out the default `'glorot_uniform'` weights initialization to `'he_normal'`. I know from [Standard's CS231n Lecture 5 Slide 69/102](http://cs231n.stanford.edu/slides/winter1516_lecture5.pdf) that batch norm reduces a deep neural net's strong dependence on correct weights initialization. The last fully connected layers following the convolutional layers are straightfoward. Batch normalization is used in those layers as well.  
 
+Lastly, dropout layers are employed for the fully connected layers with a keep rate of `0.2` and `0.5` respectively. They are there to prevent overfitting of the model. They are inherited from comma.ai. 
+
 ### Training Strategy  
 
 When I was using exactly the same architecture as described above but **without** batch normalization, I was able to train the car to **almost** go around the track. It had one trouble spot though. It was sliding very harshly against the wall on the bridge, which wouldn't be fun for passengers sitting in the car. At first, I tried to collect more data for that particular trouble spot and fine-tune the weights that had already been working quite well except for that spot. However, because my architecture wasn't complex enough, anything that I collected and blended with the original training examples threw my model off. If the car passed the bridge, it swerved off the road at the next sharp left turn; if the car made it through the next sharp left turn, it drove off into the lake in the next right turn. 
 
 Eventually I stopped and questioned my model architecture, because it clearly unlearned some good turns that it had been making earlier. I added batch normalization next, hoping that some neurons wouldn't freeze or die from further training. Once it got added, even the models that had been trained without it began to show improvement with additional epochs that contain additional training data collected by myself. That was great!
+
+I ususally trained for `8` to `10` epochs at first; with additional self-collected data, I continued to train `2` to `3` epochs at a time to improve the model some more.  
 
 ### Preprocessing Strategy
 
@@ -52,4 +56,4 @@ In terms of making the data more balanced, because the original data contains a 
 
 ### Final Model and its Training Data
 
-For my final model, I used only the Udacity data without anything that I collected myself. I have `43,394` training examples and `4,822` testing examples. They add up exactly to `8036*3*2 = 48,216`. I trained for 10 epochs. My validation loss decreased all the way to `0.013` for this particular model, higher than some other models trained using both Udacity and self-collected data, which were also able to drive the car around in the simulator.   
+For my final model, I used only the Udacity data without anything that I collected myself. I have `43,394` training examples and `4,822` testing examples. They add up exactly to `8036*3*2 = 48,216`. I trained for `10` epochs with batch size `128`. My validation loss decreased all the way to `0.013` for this particular model, higher than some other models trained using both Udacity and self-collected data, which were also able to drive the car around in the simulator.   
