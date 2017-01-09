@@ -23,7 +23,7 @@ def main(_):
 
     raw = pd.read_csv('./data/driving_log.csv')
     
-    # strips white spaces in text fields
+    # strips white spaces in text fields.
     for i in raw.columns:
         if isinstance(raw[i][1], str):
             raw[i]=raw[i].map(str.strip)
@@ -31,6 +31,7 @@ def main(_):
     tot = raw.shape[0]*3*2
     h = FLAGS.height; w = FLAGS.width; ε = FLAGS.epsilon
     
+    # create empty dictionary. 
     dat = {'features':np.zeros(shape=[tot,h,w,3]), 
            'labels':np.zeros(shape=tot), 
            'position': ['' for i in range(tot)], 
@@ -47,11 +48,13 @@ def main(_):
         
         # offset angles for left/right images.
         # flip angles for flipped images.
+        
+        # position in text.
         pos_old = ('left' if j.find('left')>=0 else 
                    'right' if j.find('right')>=0 else 'center')    
         pos_new = ('right' if j.find('left')>=0 else 
                    'left' if j.find('right')>=0 else 'center')
-        
+        # numerical angles.
         old = raw[raw[pos_old]=='IMG/'+j]['steering']
         adjusted = np.clip(old+ε if pos_old=='left' else 
                            old-ε if pos_old=='right' else old, -1., 1.)
@@ -65,6 +68,7 @@ def main(_):
         dat['labels'][i+int(tot/2)] = new
         dat['position'][i+int(tot/2)] = pos_new
     
+    # this takes care of shuffling.
     X_train, X_test, y_train, y_test = \
     train_test_split(dat['features'], dat['labels'], test_size=0.1)
     

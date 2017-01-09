@@ -72,9 +72,12 @@ def get_model():
     
 # Limit the number of near-zero angles (defined by offset β) by a factor of α.
 def limit(X, y, β=.08, α=.5):  
+    # indices of near-zero steering angles
     bad = [k for k,v in enumerate(y) if v >=-β and v <=β]
+    # indices of bigger steering angles
     good = list(set(range(0, len(y)))-set(bad))
     n = len(bad)
+    # merges the good indices with a portion of the bad indices
     new = good + [bad[i] for i in np.random.randint(0, n, int(n*α))]
     
     return X[new,], y[new]
