@@ -35,6 +35,14 @@ I made use of center/left/right images. Through trial and error, I found the bes
 
 In addition, I made use of `height_shift_range` in keras's `ImageDataGenerator` and set it to `0.2`. In my reasoning, shifting the image along the vertical axis works the same as cropping out the car hood on the bottom or the blue sky on the top of the image, even though cropping could create more precise data for the network to learn. I would still prefer my method over cropping because if the road for some reason is uneven and makes the car bounce up and down quite a lot, the front camera video feed will change, and my model, which is trained on height-shifted images, still knows how to handle those situations. I hope. 
 
-### Final Model
+In terms of making the data more balanced, because the original data contains a lot of zero steering angles, I created a threshold using my angle offset `0.08`, and sampled half of the examples that fall within that range. Here is what my entire datasets look like before they get split into train and test. 
 
-For my final model, I used only the Udacity data without anything that I collected myself. I have `43,394` training examples and `4,822` testing examples. They add up exactly to `8036*3*2`. I trained for 10 epochs. My validation loss decreased all the way to 0.013 for this particular model, higher than some other models trained using both Udacity and self-collected data, which were also able to drive the car around in the simulator.   
+![Before Flipping](./plots/original.png)  
+
+![After Flipping](./plots/flipped.png)  
+
+![After Flipping and After Sampling](./plots/sampled.png)
+
+### Final Model and its Training Data
+
+For my final model, I used only the Udacity data without anything that I collected myself. I have `43,394` training examples and `4,822` testing examples. They add up exactly to `8036*3*2 = 48,216`. I trained for 10 epochs. My validation loss decreased all the way to `0.013` for this particular model, higher than some other models trained using both Udacity and self-collected data, which were also able to drive the car around in the simulator.   
