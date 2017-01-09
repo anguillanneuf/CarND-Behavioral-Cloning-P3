@@ -40,7 +40,7 @@ Left: -0.933238+0.08
 Flipped Left: -(-0.933238+0.08)  
 ![left flipped](./plots/left_flipped.png)
 
-In addition, I made use of `height_shift_range` in keras's `ImageDataGenerator` and set it to `0.2`. In my reasoning, shifting the image along the vertical axis works the same as cropping out the car hood on the bottom or the blue sky on the top of the image, even though cropping could create more precise data for the network to learn. I would still prefer my method over cropping because if the road for some reason is uneven and makes the car bounce up and down quite a lot, the front camera video feed will change, and my model, which is trained on height-shifted images, still knows how to handle those situations. I hope. 
+In addition, I made use of `height_shift_range` in keras's `ImageDataGenerator` and set it to `0.2`. In my reasoning, shifting the image along the vertical axis works the same as cropping out the car hood on the bottom or the blue sky on the top of the image, even though cropping could create more precise data for the network to learn. I would still prefer my method over cropping because if the road for some reason is uneven and makes the car bounce up and down quite a lot, the front camera video feed will change, and my model, which is trained on height-shifted images, will still knows how to steer. 
 
 In terms of making the data more balanced, because the original data contains a lot of zero steering angles, I created a threshold using my angle offset `0.08`, and sampled half of the examples that fall within that range. Here is what my entire datasets look like before they get split into train and test. 
 
