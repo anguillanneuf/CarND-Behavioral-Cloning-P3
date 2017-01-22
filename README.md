@@ -21,7 +21,7 @@ Following the `3 1x1` are `16 5x5` with a stride of `4`, `32 3x3` with a stride 
 
 From my experience with Project 2, He normal weights worked very well, that's probably the only reason why I switch out the default `'glorot_uniform'` weights initialization to `'he_normal'`. I know from [Standard's CS231n Lecture 5 Slide 69/102](http://cs231n.stanford.edu/slides/winter1516_lecture5.pdf) that batch norm reduces a deep neural net's strong dependence on correct weights initialization. The last fully connected layers following the convolutional layers are straightfoward. Batch normalization is used in those layers as well.  
 
-Lastly, dropout layers are employed for the fully connected layers with a keep rate of `0.2` and `0.5` respectively. They are there to prevent overfitting of the model. They are inherited from comma.ai. 
+Lastly, dropout layers are employed for the fully connected layers with a drop rate of `0.2` and `0.5` respectively. They are there to prevent overfitting of the model. They are inherited from comma.ai. 
 
 ### Training Strategy  
 
